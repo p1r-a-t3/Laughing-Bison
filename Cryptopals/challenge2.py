@@ -1,33 +1,17 @@
 def hex_to_decimal(args: str):
     return int(args, base=16)
 
+def convert_to_hex(args: int):
+    return hex(args)[2:]
+
 
 def fixed_xor(args1: str, args2: str):
-    import codecs
-    # decode_string_1 = codecs.encode(
-    #     codecs.decode(args1, 'hex'), 'base64').decode()
+    decoded_stuff = ""
+    for index in range(0, len(args1)):
+        _ = hex_to_decimal(args1[index]) ^ hex_to_decimal(args2[index])
+        decoded_stuff += convert_to_hex(_)
     
-    decode_string_1 = ""
-    for i in args1:
-        _ = hex_to_decimal(i)
-        decode_string_1 += str(_)
-        
-    decode_string_2 = ""
-    for i in args2:
-        _ = hex_to_decimal(i)
-        decode_string_2 += str(_)
-        
-    # decode will make them string from byt3
-    final_string = ""
-    for i in range(0, len(decode_string_2)):
-        string_1 = ord(decode_string_1[i])
-        string_2 = ord(decode_string_2[i])
-
-        xor = string_1 ^ string_2
-        final_string += str(int(str(xor), base=16))
-
-    print(final_string)
-
+    print(decoded_stuff)
 
 if __name__ == "__main__":
     fixed_xor("1c0111001f010100061a024b53535009181c",
