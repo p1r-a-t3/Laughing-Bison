@@ -22,9 +22,9 @@ def hex_to_binary(hex_value: str):
         bin_list.append(binary_value)
 
     # zero padding
-    for vals in range(0, len(bin_list)):
-        number_of_zeros = 8 - len(bin_list[vals])
-        bin_list[vals] = ("0" * number_of_zeros) + bin_list[vals]
+    # for vals in range(0, len(bin_list)):
+    #     number_of_zeros = 8 - len(bin_list[vals])
+    #     bin_list[vals] = ("0" * number_of_zeros) + bin_list[vals]
     return bin_list
 
 
@@ -36,21 +36,27 @@ def xor_cipher(encrypted_text: list, binary_key: list):
     for key in binary_key:
         decrypted_text = ""
         for text in encrypted_text:
-            xored_value = ""
-            for i in range(0, len(text)):
-                xor = int(key[i]) ^ int(text[i])
-                xored_value += str(xor)
-            decimal_conversion = int(xored_value, base=2)
-            decrypted_text += chr(decimal_conversion)
+            # key is in binary, text is in binary.
+            # convert key to decimal.
+            __key = int(str(key), base=2)
+            __text = int(str(text), base=2)
+            # now xor
+            xor = __key ^ __text  # this is xored against decimal
+            # now convert this value to chr
+            decrypted_text += chr(xor)
+        # Add decrypted text in a list
         all_decrypted_text.append(decrypted_text)
 
     for text in all_decrypted_text:
         score = scoring_system(text)
-        
+
         if score > best_score:
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print("Previous score is : {}, current score is {}".format(best_score, score))
+            print("Previous best line is: {}\nCurrent best line is: {}".format(best_text, text))
             best_score = score
             best_text = text
-            
+
     print("Best score is: {} and text is {}".format(best_score, best_text))
 
 
@@ -70,6 +76,7 @@ def scoring_system(decrypted_text: str):
             total += character_frequencies[letters]
 
     return total
+
 
 if __name__ == "__main__":
     key = bit_combination(8)
