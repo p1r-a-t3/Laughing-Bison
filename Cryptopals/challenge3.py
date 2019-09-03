@@ -13,6 +13,13 @@ def bit_combination(n: int):
     return result
 
 
+def codec_conversion(hex: str):
+    import codecs
+    # This is what means always work in bytes.
+    # Do not directly convert to decimal unless otherwise needed.
+    return codecs.decode(hex, "hex").decode()
+
+
 def hex_to_binary(hex_value: str):
     bin_list = list()
 
@@ -20,17 +27,13 @@ def hex_to_binary(hex_value: str):
         decimal_value = int(chars, base=16)
         binary_value = str(bin(decimal_value))[2:]
         bin_list.append(binary_value)
-
-    # zero padding
-    # for vals in range(0, len(bin_list)):
-    #     number_of_zeros = 8 - len(bin_list[vals])
-    #     bin_list[vals] = ("0" * number_of_zeros) + bin_list[vals]
     return bin_list
 
 
 def xor_cipher(encrypted_text: list, binary_key: list):
     best_score = -100
     best_text = ""
+    best_index = 0
     all_decrypted_text = list()
 
     for key in binary_key:
@@ -39,25 +42,30 @@ def xor_cipher(encrypted_text: list, binary_key: list):
             # key is in binary, text is in binary.
             # convert key to decimal.
             __key = int(str(key), base=2)
-            __text = int(str(text), base=2)
+            __text = ord(text)
             # now xor
             xor = __key ^ __text  # this is xored against decimal
-            # now convert this value to chr
+            # now convert this value to chr. Xored value is in decimals
             decrypted_text += chr(xor)
         # Add decrypted text in a list
         all_decrypted_text.append(decrypted_text)
 
+    index = 0
     for text in all_decrypted_text:
         score = scoring_system(text)
-
+        index += 1
         if score > best_score:
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("Previous score is : {}, current score is {}".format(best_score, score))
-            print("Previous best line is: {}\nCurrent best line is: {}".format(best_text, text))
             best_score = score
             best_text = text
+            best_index = index
 
-    print("Best score is: {} and text is {}".format(best_score, best_text))
+    __key = binary_key[best_index]
+    __key = chr(int(key, base=2))
+
+    print("------------------------------------------------")
+    print("Key in binary should be: {}".format(__key))
+    print("Best score is: {}\nDecrypted Text is: {}".format(best_score, best_text))
+    print("------------------------------------------------")
 
 
 def scoring_system(decrypted_text: str):
@@ -80,7 +88,7 @@ def scoring_system(decrypted_text: str):
 
 if __name__ == "__main__":
     key = bit_combination(8)
-    binary_encrypted_text = hex_to_binary(
+    binary_encrypted_text = codec_conversion(
         "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
 
     xor_cipher(binary_encrypted_text, key)
