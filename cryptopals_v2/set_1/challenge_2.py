@@ -59,6 +59,8 @@ class Parent:
 
 if __name__ == "__main__":
     """
+    >> https://cryptopals.com/sets/1/challenges/2
+
     For this problem, hex to string is not needed
     XOR can be done between two numbers only. 
     I have converted the hex to decimals and then XORed them
